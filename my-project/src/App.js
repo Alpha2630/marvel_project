@@ -2,10 +2,7 @@ import { useState, useEffect } from 'react';
 
 function App() {
   const [heroes, setHeroes] = useState([]);
-  const [formData, setFormData] = useState({ 
-    name: "", 
-    power: "" 
-  });
+  const [formData, setFormData] = useState({ name: "", power: "" });
   const [editId, setEditId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -14,7 +11,7 @@ function App() {
 
   useEffect(() => {
     fetch(API_URL)
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
         setHeroes(data);
         setLoading(false);
@@ -32,25 +29,16 @@ function App() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
     if (!formData.name || !formData.power) {
       showMessage("Veuillez remplir tous les champs");
       return;
     }
-
-    if (editId) {
-      updateHero();
-    } else {
-      addHero();
-    }
+    editId ? updateHero() : addHero();
   };
 
   const addHero = () => {
@@ -75,9 +63,7 @@ function App() {
       body: JSON.stringify(formData)
     })
       .then(() => {
-        setHeroes(heroes.map(h => 
-          h.id === editId ? { ...h, ...formData } : h
-        ));
+        setHeroes(heroes.map(h => h.id === editId ? { ...h, ...formData } : h));
         resetForm();
         showMessage("Héros modifié !");
       })
@@ -97,11 +83,9 @@ function App() {
 
   const startEdit = (hero) => {
     setEditId(hero.id);
-    setFormData({
-      name: hero.name,
-      power: hero.power
-    });
+    setFormData({ name: hero.name, power: hero.power });
   };
+
   const resetForm = () => {
     setEditId(null);
     setFormData({ name: "", power: "" });
@@ -111,38 +95,41 @@ function App() {
     <div className="min-h-screen bg-gray-900 text-white">
 
       {message && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-800 px-6 py-2 rounded-lg shadow-lg">
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 
+                        bg-green-600 px-6 py-2 rounded-lg shadow-lg text-white text-sm">
           {message}
         </div>
       )}
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="bg-gray-800 p-6 rounded-lg mb-8">
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
           <h2 className="text-xl font-bold mb-4">
             {editId ? "Modifier un héros" : "Ajouter un héros"}
           </h2>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block mb-2">Nom du héros</label>
+              <label className="block mb-1 text-sm">Nom du héros</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-gray-700 rounded"
+                className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 
+                           focus:outline-none focus:border-red-500"
                 placeholder="Ex: Spider-Man"
               />
             </div>
             
             <div>
-              <label className="block mb-2">Pouvoirs</label>
+              <label className="block mb-1 text-sm">Pouvoirs</label>
               <input
                 type="text"
                 name="power"
                 value={formData.power}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-gray-700 rounded"
+                className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 
+                           focus:outline-none focus:border-red-500"
                 placeholder="Ex: Toiles d'araignée"
               />
             </div>
@@ -150,9 +137,10 @@ function App() {
             <div className="flex gap-2 pt-2">
               <button
                 type="submit"
-                className={`px-4 py-2 rounded font-bold ${
-                  editId ? "bg-yellow-500 text-black" : "bg-red-600"
-                }`}
+                className={`px-4 py-2 rounded-lg font-bold transition-colors duration-200 
+                  ${editId 
+                    ? "bg-yellow-500 hover:bg-yellow-400 text-black" 
+                    : "bg-red-600 hover:bg-red-500"}`}
               >
                 {editId ? "Modifier" : "Ajouter"}
               </button>
@@ -161,7 +149,7 @@ function App() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-4 py-2 border border-gray-600 rounded"
+                  className="px-4 py-2 border border-gray-600 rounded-lg hover:bg-gray-700"
                 >
                   Annuler
                 </button>
@@ -169,27 +157,29 @@ function App() {
             </div>
           </form>
         </div>
+
         {loading ? (
           <div className="text-center py-8">
-            <p>Chargement en cours...</p>
+            <p className="text-gray-400">Chargement en cours...</p>
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {heroes.map(hero => (
-              <div key={hero.id} className="bg-gray-800 p-4 rounded-lg">
+              <div key={hero.id} 
+                   className="bg-gray-800 p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200">
                 <h3 className="text-xl font-bold text-red-400">{hero.name}</h3>
                 <p className="text-gray-300 my-2">{hero.power}</p>
                 
                 <div className="flex gap-2 mt-4">
                   <button
                     onClick={() => startEdit(hero)}
-                    className="bg-yellow-500 text-black px-3 py-1 rounded"
+                    className="bg-yellow-500 hover:bg-yellow-400 text-black px-3 py-1 rounded-lg"
                   >
                     Modifier
                   </button>
                   <button
                     onClick={() => deleteHero(hero.id)}
-                    className="bg-gray-700 px-3 py-1 rounded"
+                    className="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-lg"
                   >
                     Supprimer
                   </button>

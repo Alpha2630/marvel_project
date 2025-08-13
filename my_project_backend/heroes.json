@@ -2,7 +2,7 @@
   {
     "id": 1755083199150,
     "name": "Alking",
-    "power": "Rap"
+    "power": "Song"
   },
   {
     "id": 1755083215703,
@@ -10,8 +10,13 @@
     "power": "pouvoir"
   },
   {
-    "id": 1755084570029,
-    "name": "Spider-Man",
-    "power": "Toile d'araignée "
+    "id": 1755104797992,
+    "name": "Doctor Strange",
+    "power": "Temps"
+  },
+  {
+    "id": 1755105148293,
+    "name": "Aquaman",
+    "power": "Tridant"
   }
 ]
